@@ -1,0 +1,64 @@
+:root {
+    --col-row-width: clamp(1rem, 15vh, 5.5rem);
+    --font-size-btn: clamp(0.5rem, 5vh, 5.5rem);
+    --font-size-output: clamp(1rem, 9vh, 6rem);
+    --clr-bg-main-dark:rgb(255, 171, 225);
+    --clr-bg-main-light: rgb(255, 230, 230);
+    --clr-bg-output: rgb(97, 85, 166);
+    --clr-bg-btn: rgb(166, 133, 226);
+    --clr-bg-btn-hov: rgb(149, 109, 224);
+    --clr-font: rgb(247, 234, 234);
+}
+
+body {
+    background: linear-gradient(to left, var(--clr-bg-main-dark), var(--clr-bg-main-light));
+    color: var(--clr-font);
+    font-weight: 600;
+    font-family: 'Rubik', sans-serif;
+}
+
+.calc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, var(--col-row-width));
+    grid-template-rows: repeat(6, var(--col-row-width));
+    width: calc(4*var(--col-row-width));
+    padding: 2px;
+    margin: auto;
+    border: 5px solid var(--clr-bg-btn);
+    background: var(--clr-bg-main-dark);
+}
+
+.output {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 5px;
+    margin:1px;
+    background: var(--clr-bg-output);
+    grid-column: span 4;
+    font-size: var(--font-size-output);
+}
+
+.ac-btn {
+    grid-column: span 2;
+}
+
+.add-btn {
+    grid-row: span 2;
+}
+
+button {
+    margin: 1px;
+    background: var(--clr-bg-btn);
+    font-size: var(--font-size-btn);  
+    font-weight: inherit;
+    font-family: inherit;
+    color: inherit;
+}
+
+button:hover {
+    background: var(--clr-bg-btn-hov);
+}
+
+
+
