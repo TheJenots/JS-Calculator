@@ -1,6 +1,6 @@
 const calculator = document.querySelector(".calc-grid");
 const btns = calculator.querySelectorAll("button");
-const output = calculator.querySelector(`div[data-type="output"]`);
+const display = calculator.querySelector(`div[data-type="output"]`);
 
 
 btns.forEach(btn => btn.addEventListener("click", e => {
@@ -8,53 +8,67 @@ btns.forEach(btn => btn.addEventListener("click", e => {
     let currentInput = e.target.textContent;
     let prevInput = calculator.dataset.prevInput; 
     let operator = calculator.dataset.operator;
-    let firstNumber = Number(calculator.dataset.firstNumber);
-    let secondNumber = Number(calculator.dataset.secondNumber);
-    
+    let firstNumber = parseFloat(calculator.dataset.firstNumber);
+    let secondNumber = parseFloat(calculator.dataset.secondNumber);    
 
     if (btnType === "num-btn") {
        if (!prevInput) {
-           output.textContent = currentInput;
-           calculator.dataset.prevInput = output.textContent;
-       } else {
-           output.textContent = prevInput + currentInput;
-           calculator.dataset.prevInput = output.textContent;
+           display.textContent = currentInput;
+           calculator.dataset.prevInput = display.textContent;
+       } else if (prevInput.includes(".") && currentInput === ".") {
+           return;
+       }else {
+           display.textContent = prevInput + currentInput;
+           calculator.dataset.prevInput = display.textContent;
        }
-        
+       
     }
 
     if (btnType === "op-btn") {
         if(prevInput && !operator) {
-            calculator.dataset.firstNumber = prevInput;            
+            firstNumber = parseFloat(prevInput);
             calculator.dataset.operator = currentInput;
-             
+            calculator.dataset.firstNumber = firstNumber;
+            delete calculator.dataset.prevInput;
+            
         } else if(prevInput && operator) {
-            calculator.dataset.secondNumber = output.textContent;
+            secondNumber = parseFloat(prevInput);
+            calculator.dataset.secondNumber = secondNumber;
             operate(firstNumber, operator, secondNumber);
-        } else return; 
-        delete calculator.dataset.prevInput;
-    }
+            calculator.dataset.operator = currentInput;
+            calculator.dataset.firstNumber = display.textContent;
+            delete calculator.dataset.secondNumber;
+            delete calculator.dataset.prevInput;
+        } 
+    } 
 
     if (btnType === "eq-btn") {
-        calculator.dataset.secondNumber = output.textContent;
+        secondNumber = parseFloat(prevInput);
+        calculator.dataset.secondNumber = secondNumber;
         operate(firstNumber, operator, secondNumber);
+        Object.keys(calculator.dataset).forEach(dataKey => delete calculator.dataset[dataKey]);
+
     }
 
     if (btnType === "del-btn") {
-
+        display.textContent = prevInput.slice(0, ((prevInput.length)-1));
+        calculator.dataset.prevInput = display.textContent;
     }
 
     if (btnType === "ac-btn") {
         Object.keys(calculator.dataset).forEach(dataKey => delete calculator.dataset[dataKey]);
-        output.textContent = "0";
+        display.textContent = "0";
     }
 
     
 }));
 
 function operate(a, op, b) {
-    if (op === "+") {console.log(a+b)}
-    if (op === "-") {console.log(a-b)}
-    if (op === "×") {console.log(a*b)}
-    if (op === "÷") {console.log(a/b)}
+    let result = "";
+    if (op === "+") result = a + b;
+    if (op === "-") result = a - b;
+    if (op === "×") result = a * b;
+    if (op === "÷") result = a / b;
+    display.textContent = result.toString().slice(0, 9);
 }
+
